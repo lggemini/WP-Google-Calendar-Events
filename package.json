@@ -1,0 +1,31 @@
+{
+  "name": "google-calendar-events",
+  "title": "Google Calendar Events",
+  "description": "Show off your Google calendar in grid (month) or list view, in a post, page or widget, and in a style that matches your site.",
+  "version": "v2.2.6",
+  "homepage": "https://wordpress.org/plugins/google-calendar-events/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pderksen/WP-Google-Calendar-Events"
+  },
+  "devDependencies": {
+    "autoprefixer-core": "^5.2.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-compress": "^0.13.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-cssmin": "^0.12.3",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-qunit": "^0.7.0",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-phpunit": "^0.3.6",
+    "grunt-postcss": "^0.5.4",
+    "grunt-sass": "^1.0.0",
+    "grunt-wp-deploy": "^1.0.3",
+    "load-grunt-tasks": "^3.2.0",
+    "qunitjs": "~1.18.0"
+  },
+  "keywords": []
+}

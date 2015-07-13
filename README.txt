@@ -213,7 +213,7 @@ There are three ways to install this plugin.
 * Fixed bug with all day events not displaying.
 * Added missing timezone parameter to internal query.
 
-= 2.1.0 = 
+= 2.1.0 =
 
 * Updated to use Google Calendar API version 3. Version 2 deprecated on Nov. 17, 2014.
 
@@ -221,7 +221,7 @@ There are three ways to install this plugin.
 
 * As of Nov. 17, 2014 the GCal API v2 is deprecated, which breaks all calendar feed displays. This update will temporarily hide the display while we work on a solution that uses GCal API v3.
 
-= 2.0.7 = 
+= 2.0.7 =
 
 * Events will now display if it hasn't ended yet for list views.
 * Fixed bug with date() call causing a display error in some cases.
@@ -232,7 +232,7 @@ There are three ways to install this plugin.
 * Simplified text domain function.
 * Added Lithuanian translation - Provided by Andrius Mazeika of [mazeika.info](http://mazeika.info/).
 
-= 2.0.6.2 = 
+= 2.0.6.2 =
 
 * Reverted previous bug fix that introduced new bugs.
 
