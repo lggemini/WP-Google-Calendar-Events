@@ -141,7 +141,7 @@ module.exports = function( grunt ) {
 					'!phpunit.xml',
 					'!phpunit.xml.dist'
 				],
-				dest: 'build/<%= pkg.version %>/'
+				dest: 'build/tags/<%= pkg.version %>/'
 			}
 		},
 		compress: {
