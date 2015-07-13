@@ -1,12 +1,48 @@
 module.exports = function( grunt ) {
 
+	var pkg = grunt.file.readJSON( 'package.json' ),
+		// version = 'vX.Y.Z'
+		version = pkg.version,
+		// semver = 'X.Y.Z'
+		semver = version.substring( 1, version.length),
+		// Files to include in a release
+		distFiles =  [
+			'**',
+			'!assets/css/sass/**',
+			'!assets/css/src/**',
+			'!assets/js/src/**',
+			'!build/**',
+			'!images/src/**',
+			'!images/wp/**',
+			'!node_modules/**',
+			'!tests/**',
+			'!vendor/**',
+			'!**/.*',
+			'!bootstrap.php',
+			'!bootstrap.php.dist',
+			'!bower.json',
+			'!ChangeLog.md',
+			'!composer.json',
+			'!composer.lock',
+			'!Gruntfile.js',
+			'!package.json',
+			'!phpunit.xml',
+			'!phpunit.xml.dist',
+			'!README.md'
+		];
+
+	console.log( pkg.version + ' => ' + semver );
+
 	// Project configuration
 	grunt.initConfig( {
-		pkg:    grunt.file.readJSON( 'package.json' ),
+
+		pkg: pkg,
+		semver : semver,
+
 		concat: {
 			options: {
 				stripBanners: true,
-				banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+				banner: '/*! <%= pkg.title %> - v<%= semver %>\n' +
 				' * <%= pkg.homepage %>\n' +
 				' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
 				' * Licensed GPLv2+' +
@@ -19,19 +55,21 @@ module.exports = function( grunt ) {
 				dest: 'assets/js/google-calendar-events.js'
 			}
 		},
+
 		jshint: {
 			all: [
 				'Gruntfile.js',
 				'assets/js/src/**/*.js'
 			]
 		},
+
 		uglify: {
 			all: {
 				files: {
 					'assets/js/test.min.js': ['assets/js/google-calendar-events.js']
 				},
 				options: {
-					banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+					banner: '/*! <%= pkg.title %> - v<%= semver %>\n' +
 					' * <%= pkg.homepage %>\n' +
 					' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
 					' * Licensed GPLv2+' +
@@ -70,7 +108,7 @@ module.exports = function( grunt ) {
 
 		cssmin: {
 			options: {
-				banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+				banner: '/*! <%= pkg.title %> - v<%= semver %>\n' +
 				' * <%=pkg.homepage %>\n' +
 				' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
 				' * Licensed GPLv2+' +
@@ -87,6 +125,7 @@ module.exports = function( grunt ) {
 				ext: '.min.css'
 			}
 		},
+
 		watch:  {
 			livereload: {
 				files: ['assets/css/*.css'],
@@ -109,53 +148,47 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
+
 		clean: {
-			main: ['build/<%= pkg.version %>']
+			main: [
+				// Clean directories before new build
+				'build/trunk',
+				'release'
+			]
 		},
+
+		// Copy the plugin to a svn versioned build directory
 		copy: {
-			// Copy the plugin to a versioned build directory
-			main: {
-				src:  [
-					'**',
-					'assets',
-					'images/**',
-					'!images/wp/**',
-					'includes/**',
-					'languages/**',
-					'!**/.*',
-					'!**/readme.md',
-					'!node_modules/**',
-					'!vendor/**',
-					'!tests/**',
-					'!build/**',
-					'!assets/css/sass/**',
-					'!assets/css/src/**',
-					'!assets/js/src/**',
-					'!images/src/**',
-					'!bootstrap.php',
-					'!bower.json',
-					'!composer.json',
-					'!composer.lock',
-					'!Gruntfile.js',
-					'!package.json',
-					'!phpunit.xml',
-					'!phpunit.xml.dist'
-				],
-				dest: 'build/tags/<%= pkg.version %>/'
+			assets : {
+				expand: true,
+				src: 'images/wp/*.*',
+				dest: 'build/assets/'
+			},
+			tag: {
+				expand: true,
+				src: distFiles,
+				dest: 'build/tags/' + semver + '/'
+			},
+			trunk: {
+				expand: true,
+				src: distFiles,
+				dest: 'build/trunk'
 			}
 		},
+
 		compress: {
 			main: {
 				options: {
 					mode: 'zip',
-					archive: './release/google-calendar-events.<%= pkg.version %>.zip'
+					archive: './release/google-calendar-events.<%= semver %>.zip'
 				},
 				expand: true,
-				cwd: 'build/<%= pkg.version %>/',
+				cwd: 'build/<%= semver %>/',
 				src: ['**/*'],
-				dest: 'test/'
+				dest: 'releases/'
 			}
 		},
+
 		wp_deploy: {
 			deploy: {
 				options: {
@@ -166,6 +199,7 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
+
 		phpunit: {
 			classes: {
 				dir: 'tests/phpunit/'
@@ -177,9 +211,11 @@ module.exports = function( grunt ) {
 				testSuffix: 'Tests.php'
 			}
 		},
+
 		qunit: {
 			all: ['tests/qunit/**/*.html']
 		}
+
 	} );
 
 	// Load tasks
@@ -193,11 +229,13 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'default', ['css', 'js'] );
 
-	grunt.registerTask( 'build', ['default', 'clean', 'copy', 'compress'] );
-
-	grunt.registerTask( 'deploy', ['build', 'wp_deploy'] );
-
 	grunt.registerTask( 'test', ['phpunit', 'qunit'] );
+
+	grunt.registerTask( 'build', ['default', 'test'] );
+
+	grunt.registerTask( 'release', ['build', 'clean', 'copy:trunk', 'copy:tags', 'compress'] );
+
+	grunt.registerTask( 'deploy', ['release', 'wp_deploy'] );
 
 	grunt.util.linefeed = '\n';
 };
