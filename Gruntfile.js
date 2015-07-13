@@ -180,7 +180,7 @@ module.exports = function( grunt ) {
 			main: {
 				options: {
 					mode: 'zip',
-					archive: './release/google-calendar-events.<%= semver %>.zip'
+					archive: './release/google-calendar-events-<%= semver %>.zip'
 				},
 				expand: true,
 				cwd: 'build/<%= semver %>/',
@@ -233,7 +233,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'build', ['default', 'test'] );
 
-	grunt.registerTask( 'release', ['build', 'clean', 'copy:trunk', 'copy:tags', 'compress'] );
+	grunt.registerTask( 'release', ['build', 'clean', 'copy:trunk', 'copy:tag', 'compress'] );
 
 	grunt.registerTask( 'deploy', ['release', 'wp_deploy'] );
 

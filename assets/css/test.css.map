@@ -1,0 +1,10 @@
+{
+	"version": 3,
+	"file": "test.css",
+	"sources": [
+		"sass/google-calendar-events.scss"
+	],
+	"sourcesContent": [],
+	"mappings": "AAAA;;;;;;GAMG",
+	"names": []
+}
