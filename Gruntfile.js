@@ -66,7 +66,7 @@ module.exports = function( grunt ) {
 		uglify: {
 			all: {
 				files: {
-					'assets/js/test.min.js': ['assets/js/google-calendar-events.js']
+					'assets/js/google-calendar-events.min.js': ['assets/js/google-calendar-events.js']
 				},
 				options: {
 					banner: '/*! <%= pkg.title %> - v<%= semver %>\n' +
@@ -88,7 +88,7 @@ module.exports = function( grunt ) {
 			},
 			all: {
 				files: {
-					'assets/css/test.css': 'assets/css/sass/google-calendar-events.scss'
+					'assets/css/google-calendar-events.css': 'assets/css/sass/google-calendar-events.scss'
 				}
 			}
 		},
@@ -101,7 +101,7 @@ module.exports = function( grunt ) {
 					]
 				},
 				files: {
-					'assets/css/test.css': [ 'assets/css/google-calendar-events.css' ]
+					'assets/css/google-calendar-events.css': [ 'assets/css/google-calendar-events.css' ]
 				}
 			}
 		},
