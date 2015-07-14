@@ -231,7 +231,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'build', ['default', 'test'] );
 
-	grunt.registerTask( 'release', ['build', 'clean', 'copy:trunk', 'copy:tag', 'compress'] );
+	grunt.registerTask( 'release', ['build', 'clean', 'copy:assets', 'copy:trunk', 'copy:tag', 'compress'] );
 
 	grunt.registerTask( 'deploy', ['release', 'wp_deploy'] );
 
