@@ -18,16 +18,17 @@ class GCE_Event {
 	 * 
 	 * @since 2.0.0
 	 */
-	function __construct( GCE_Feed $feed, $id, $title, $description, $location, $start_time, $end_time, $link ) {
+	function __construct( GCE_Feed $feed, $id, $title, $description, $location, $start_time, $end_time, $link, $transparency ) {
 		
-		$this->feed        = $feed;
-		$this->id          = $id;
-		$this->title       = $title;
-		$this->description = $description;
-		$this->location    = $location;
-		$this->start_time  = $start_time;
-		$this->end_time    = $end_time;
-		$this->link        = $link;
+		$this->feed         = $feed;
+		$this->id           = $id;
+		$this->title        = $title;
+		$this->description  = $description;
+		$this->location     = $location;
+		$this->start_time   = $start_time;
+		$this->end_time     = $end_time;
+		$this->link         = $link;
+		$this->transparency = $transparency;
 		
 		//Calculate which day type this event is (SWD = single whole day, SPD = single part day, MWD = multiple whole day, MPD = multiple part day)
 		if ( ( $start_time + 86400 ) <= $end_time ) {
@@ -239,6 +240,7 @@ class GCE_Event {
 			'event-num',      //The position of the event in the current list, or the position of the event in the current month (for grids)
 			'event-id',       //The event UID (unique identifier assigned by Google)
 			'cal-id',         //The calendar ID
+			'transparency',   //Whether the option 'show me as' of the event is set to 'available' or 'busy'
 
 			//Anything between the opening and closing tags of the following logical shortcodes (including further shortcodes) will only be displayed if:
 
@@ -258,7 +260,9 @@ class GCE_Event {
 			'if-first',       //The event is the first in the day
 			'if-not-first',   //The event is not the first in the day
 			'if-multi-day',   //The event spans multiple days
-			'if-single-day'   //The event does not span multiple days
+			'if-single-day',  //The event does not span multiple days
+			'if-available',   //The event's option 'show me as' is set to 'available'
+			'if-busy'         //The event's option 'show me as' is set to 'busy'
 		);
 
 		$this->regex = '/(.?)\[(' . implode( '|', $shortcodes ) . ')\b(.*?)(?:(\/))?\](?:(.+?)\[\/\2\])?(.?)/s';
@@ -412,6 +416,13 @@ class GCE_Event {
 				//$cal_id = explode( '/', $this->feed->feed_url );
 				return $m[1] . $this->feed->calendar_id . $m[6];
 
+			case 'transparency':
+				$transparency = esc_html( trim( $this->transparency ) );
+                                
+                                $transparency = ($transparency == 'transparent') ? 'available' : 'busy';
+                                
+				return $m[1] . $transparency . $m[6];
+
 			case 'if-all-day':
 				if ( 'SWD' == $this->day_type || 'MWD' == $this->day_type )
 					return $m[1] . $this->look_for_shortcodes( $m[5] ) . $m[6];
@@ -510,6 +521,18 @@ class GCE_Event {
 
 			case 'if-single-day':
 				if ( 'SPD' == $this->day_type || 'SWD' == $this->day_type )
+					return $m[1] . $this->look_for_shortcodes( $m[5] ) . $m[6];
+
+				return '';
+				
+			case 'if-available':
+				if ( $this->transparency == 'transparent' )
+					return $m[1] . $this->look_for_shortcodes( $m[5] ) . $m[6];
+
+				return '';
+
+			case 'if-busy':
+				if ( $this->transparency != 'transparent' )
 					return $m[1] . $this->look_for_shortcodes( $m[5] ) . $m[6];
 
 				return '';
