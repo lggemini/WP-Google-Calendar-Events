@@ -4,7 +4,7 @@ module.exports = function( grunt ) {
 		// version = 'vX.Y.Z'
 		version = pkg.version,
 		// semver = 'X.Y.Z'
-		semver = version.substring( 1, version.length),
+		semver = version.substring( 1, version.length ),
 		// Files to include in a release
 		distFiles =  [
 			'**',
@@ -183,9 +183,8 @@ module.exports = function( grunt ) {
 					archive: './release/google-calendar-events-<%= semver %>.zip'
 				},
 				expand: true,
-				cwd: 'build/<%= semver %>/',
-				src: ['**/*'],
-				dest: 'releases/'
+				src: distFiles,
+				dest: '/google-calendar-events/'
 			}
 		},
 
@@ -193,8 +192,7 @@ module.exports = function( grunt ) {
 			deploy: {
 				options: {
 					plugin_slug: 'google-calendar-events',
-					svn_user: 'pderksen',
-					build_dir: 'build',
+					build_dir: 'build/trunk',
 					assets_dir: 'images/wp'
 				}
 			}
